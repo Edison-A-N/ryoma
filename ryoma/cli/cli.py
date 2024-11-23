@@ -1,6 +1,6 @@
 from typing import Optional
 import click
-from core.config import settings
+from ryoma.core.config import settings
 
 
 @click.group()
