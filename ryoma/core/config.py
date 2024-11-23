@@ -11,6 +11,12 @@ class Settings(BaseSettings):
     API_HOST: str = "127.0.0.1"
     API_PORT: int = 8000
 
+    # Azure OpenAI settings
+    AZURE_OPENAI_API_KEY: str = ""
+    AZURE_OPENAI_ENDPOINT: str = ""
+
+    GOOGLE_API_KEY: str = ""
+
     class Config:
         env_file = ".env"
 
