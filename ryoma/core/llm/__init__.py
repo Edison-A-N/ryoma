@@ -10,7 +10,7 @@ def create_llm(
     """Create LLM instance based on provider
 
     Args:
-        provider: LLM provider, supports 'aws_bedrock', 'azure_openai' and 'google_gemini'
+        provider: LLM provider, supports 'aws_bedrock', 'openai' and 'google_gemini'
         model_id: Model identifier
         **kwargs: Additional configuration for the LLM
 
