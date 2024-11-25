@@ -4,7 +4,6 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 from ryoma.core.config import settings
 from ryoma.core.llm.base import BaseLLM
-from ryoma.core.logging import logger
 
 class GeminiLLM(BaseLLM):
     def __init__(self, model_id: str):
