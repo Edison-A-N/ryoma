@@ -1,10 +1,9 @@
 from typing import Dict, Any, Literal
-from ryoma.core.logging import logger
 from ryoma.core.llm.base import BaseLLM
 
 
 def create_llm(
-    provider: Literal["aws_bedrock", "azure_openai", "google_gemini"] = "aws_bedrock",
+    provider: Literal["aws_bedrock", "openai", "google_gemini"] = "aws_bedrock",
     model_id: str = "amazon.titan-text-premier-v1:0",
     **kwargs: Dict[str, Any],
 ) -> BaseLLM:
@@ -22,10 +21,10 @@ def create_llm(
         from ryoma.core.llm.backend.aws_bedrock import BedrockLLM
         return BedrockLLM(model_id=model_id, **kwargs)
 
-    if provider == "azure_openai":
-        from ryoma.core.llm.backend.azure_openai import AzureOpenAILLM
+    if provider == "openai":
+        from ryoma.core.llm.backend.openai import OpenAILLM
 
-        return AzureOpenAILLM(model_id=model_id)
+        return OpenAILLM(model_id=model_id)
 
     if provider == "google_gemini":
         from ryoma.core.llm.backend.google_gemini import GeminiLLM

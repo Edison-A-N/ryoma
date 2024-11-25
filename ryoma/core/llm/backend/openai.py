@@ -1,17 +1,13 @@
 from typing import List, Dict, Generator, Optional
-from langchain_openai import AzureChatOpenAI
+from openai import OpenAI
 from ryoma.core.config import settings
 from ryoma.core.llm.base import BaseLLM
 
 
-class AzureOpenAILLM(BaseLLM):
+class OpenAILLM(BaseLLM):
     def __init__(self, model_id: str):
-        self.client = AzureChatOpenAI(
-            openai_api_key=settings.AZURE_OPENAI_API_KEY,
-            azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
-            openai_api_version="2024-06-01",
-            model_name=model_id,
-            streaming=True,
+        self.client = OpenAI(
+            api_key=settings.OPENAI_API_KEY, base_url=settings.OPENAI_ENDPOINT
         )
         self.model_id = model_id
 
@@ -19,17 +15,25 @@ class AzureOpenAILLM(BaseLLM):
         self, prompt: str, history: Optional[List[Dict[str, str]]] = None, **kwargs
     ) -> str:
         messages = self._build_messages(prompt, history)
-        response = self.client.invoke(messages)
-        return response.content
+        response = self.client.chat.completions.create(
+            model=self.model_id,
+            messages=messages,
+            stream=False,
+        )
+        return response.choices[0].message.content
 
     def stream_chat(
         self, prompt: str, history: Optional[List[Dict[str, str]]] = None, **kwargs
     ) -> Generator[str, None, None]:
         messages = self._build_messages(prompt, history)
-        response = self.client.stream(messages)
+        response = self.client.chat.completions.create(
+            model=self.model_id,
+            messages=messages,
+            stream=True,
+        )
         for chunk in response:
-            if chunk.content:
-                yield chunk.content
+            if chunk.choices[0].delta.content:
+                yield chunk.choices[0].delta.content
 
     def _build_messages(
         self, prompt: str, history: Optional[List[Dict[str, str]]] = None
