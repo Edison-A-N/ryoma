@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     API_HOST: str = "127.0.0.1"
     API_PORT: int = 8000
 
+    # AWS Bedrock settings
+    AWS_BEDROCK_ENDPOINT: str = ""
+
     # OpenAI settings
     OPENAI_API_KEY: str = ""
     OPENAI_ENDPOINT: str = ""

@@ -20,9 +20,6 @@ class ChatResponse(BaseModel):
 @router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     try:
-        logger.info(
-            "Processing chat request", provider=request.provider, model=request.model_id
-        )
         llm = create_llm(provider=request.provider, model_id=request.model_id)
         response = llm.chat(request.prompt)
         return ChatResponse(message=response)
