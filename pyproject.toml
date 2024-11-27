@@ -16,6 +16,7 @@ uvicorn = "^0.30.6"
 click = "^8.1.7"
 pydantic-settings = "^2.1.0"
 colorama = "^0.4.6"
+pymilvus = "^2.5.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.2.0"
