@@ -57,3 +57,5 @@ poetry.lock
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+.milvus/
