@@ -20,6 +20,11 @@ class Settings(BaseSettings):
 
     GOOGLE_API_KEY: str = ""
 
+    MILVUS_HOST: str = "localhost"
+    MILVUS_PORT: int = 19530
+    MILVUS_COLLECTION_NAME: str = "vectors"
+    MILVUS_DIM: int = 1536
+
     class Config:
         env_file = ".env"
 
