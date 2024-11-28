@@ -20,6 +20,8 @@ class Settings(BaseSettings):
 
     GOOGLE_API_KEY: str = ""
 
+    EMBEDDING_MODEL_NAME: str = "fasttext"
+
     STORAGE_VECTOR_TYPE: str = "milvus"
 
     MILVUS_HOST: str = "localhost"
