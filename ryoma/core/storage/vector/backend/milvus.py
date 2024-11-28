@@ -37,13 +37,13 @@ class MilvusVectorDB(VectorDatabase):
         self.dim = dim or settings.MILVUS_DIM
 
         # Connect to Milvus
-        connections.connect(host=host, port=port)
+        connections.connect(host=self.host, port=self.port)
 
         # Create collection if it doesn't exist
-        if not utility.has_collection(collection_name):
+        if not utility.has_collection(self.collection_name):
             self._create_collection()
 
-        self.collection = Collection(collection_name)
+        self.collection = Collection(self.collection_name)
         self.collection.load()
 
     def _create_collection(self) -> None:
@@ -56,7 +56,15 @@ class MilvusVectorDB(VectorDatabase):
             FieldSchema(name="metadata", dtype=DataType.JSON),
         ]
         schema = CollectionSchema(fields=fields)
-        Collection(self.collection_name, schema)
+        collection = Collection(self.collection_name, schema)
+
+        # Create IVF_FLAT index for vector field
+        index_params = {
+            "metric_type": "L2",
+            "index_type": "IVF_FLAT",
+            "params": {"nlist": 1024},
+        }
+        collection.create_index(field_name="vector", index_params=index_params)
 
     def insert(
         self, vectors: List[List[float]], metadata: List[Dict[str, Any]]

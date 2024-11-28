@@ -20,6 +20,8 @@ class Settings(BaseSettings):
 
     GOOGLE_API_KEY: str = ""
 
+    STORAGE_VECTOR_TYPE: str = "milvus"
+
     MILVUS_HOST: str = "localhost"
     MILVUS_PORT: int = 19530
     MILVUS_COLLECTION_NAME: str = "vectors"
