@@ -1,12 +1,12 @@
 import fasttext
-from typing import List
+from typing import List, Optional
 from ryoma.core.embedding.base import BaseEmbedding
 
 
 class FastTextEmbedding(BaseEmbedding):
     """FastText embedding model implementation."""
 
-    def __init__(self, model_path: str):
+    def __init__(self, model_path: Optional[str] = None):
         """Initialize FastText model.
 
         Args:

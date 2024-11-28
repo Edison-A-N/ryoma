@@ -5,15 +5,12 @@ from typing import List, Union
 class BaseEmbedding(ABC):
     """Base class for text embedding models."""
 
-    def __init__(self, model_name: str, dimension: int):
+    def __init__(self, **kwargs):
         """Initialize embedding model.
 
         Args:
-            model_name: Name/identifier of the embedding model
-            dimension: Dimension of the embedding vectors
+            **kwargs: Keyword arguments for specific embedding models
         """
-        self.model_name = model_name
-        self.dimension = dimension
 
     @abstractmethod
     async def embed_text(self, text: str) -> List[float]:
