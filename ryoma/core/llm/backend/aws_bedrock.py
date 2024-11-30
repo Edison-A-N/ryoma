@@ -7,7 +7,7 @@ from ryoma.core.llm.base import BaseLLM
 
 
 class BedrockLLM(BaseLLM):
-    def __init__(self, model_id: str = "amazon.titan-text-premier-v1:0", **kwargs):
+    def __init__(self, model_id: str, **kwargs):
         bedrock_endpoint = settings.AWS_BEDROCK_ENDPOINT or None
 
         self._chat_model = ChatBedrock(

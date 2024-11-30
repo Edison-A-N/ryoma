@@ -1,3 +1,4 @@
+from typing import Literal
 from pydantic_settings import BaseSettings
 
 
@@ -10,6 +11,10 @@ class Settings(BaseSettings):
 
     API_HOST: str = "127.0.0.1"
     API_PORT: int = 8000
+
+    # LLM settings
+    LLM_PROVIDER: Literal["aws_bedrock", "openai", "google_gemini"] = "aws_bedrock"
+    LLM_MODEL_ID: str = ""
 
     # AWS Bedrock settings
     AWS_BEDROCK_ENDPOINT: str = ""

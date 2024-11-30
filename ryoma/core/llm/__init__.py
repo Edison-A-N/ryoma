@@ -1,10 +1,10 @@
-from typing import Dict, Any, Literal
+from typing import Dict, Any, Literal, Optional
 from ryoma.core.llm.base import BaseLLM
-
+from ryoma.core.config import settings
 
 def create_llm(
-    provider: Literal["aws_bedrock", "openai", "google_gemini"] = "aws_bedrock",
-    model_id: str = "amazon.titan-text-premier-v1:0",
+    provider: Optional[Literal["aws_bedrock", "openai", "google_gemini"]] = None,
+    model_id: Optional[str] = None,
     **kwargs: Dict[str, Any],
 ) -> BaseLLM:
     """Create LLM instance based on provider
@@ -17,6 +17,18 @@ def create_llm(
     Returns:
         BaseLLM instance
     """
+    if provider is None:
+        provider = settings.LLM_PROVIDER
+        model_id = settings.LLM_MODEL_ID
+    else:
+        if model_id is None:
+            raise ValueError("model_id is required")
+
+    if not provider:
+        raise ValueError("provider is required")
+    if not model_id:
+        raise ValueError(f"model_id is required, got {model_id}")
+
     if provider == "aws_bedrock":
         from ryoma.core.llm.backend.aws_bedrock import BedrockLLM
         return BedrockLLM(model_id=model_id, **kwargs)
