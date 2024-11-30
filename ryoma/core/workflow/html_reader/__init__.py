@@ -1,6 +1,6 @@
 import textwrap
-from typing import Literal
-from pydantic import BaseModel
+from typing import Literal, Optional, Union, Dict, Any
+from pydantic import BaseModel, Field
 import json
 from langchain_core.tools import StructuredTool
 from langchain_core.messages import HumanMessage
@@ -27,9 +27,21 @@ async def async_read_url(inputs: URLInput) -> str:
 read_url = StructuredTool.from_function(coroutine=async_read_url)
 
 
+class ModelInfo(BaseModel):
+    provider: str
+    model_id: str
+
+
+class WorkflowResponse(BaseModel):
+    model_info: ModelInfo
+    summary: Optional[Union[Dict[str, Any], str]] = None
+    error: Optional[str] = None
+
+
 class URLSummaryWorkflow:
     def __init__(self):
-        self.model = create_llm().get_model()
+        self.llm_backend = create_llm()
+        self.model = self.llm_backend.get_model()
         self.llm = self.model.bind_tools([read_url])
         self.tool_node = ToolNode([read_url])
         self.app = self._create_workflow()
@@ -59,6 +71,11 @@ class URLSummaryWorkflow:
 
     async def process(self, url: str) -> dict:
         """Process URL and return content summary"""
+        model_info = ModelInfo(
+            provider=self.llm_backend.get_provider(),
+            model_id=self.llm_backend.get_model_id(),
+        )
+
         initial_state = {
             "messages": [
                 HumanMessage(
@@ -85,24 +102,28 @@ class URLSummaryWorkflow:
             result = await self.app.ainvoke(initial_state)
             summary = result["messages"][-1].content
 
-            # Try to parse JSON from the summary
             try:
-                # Ensure proper JSON encoding for non-ASCII characters
                 parsed_json = json.loads(summary, strict=False)
-                return {"summary": parsed_json, "error": None}
+                return WorkflowResponse(
+                    model_info=model_info, summary=parsed_json, error=None
+                ).model_dump()
             except json.JSONDecodeError as je:
-                # Try to clean and re-parse the JSON if initial parsing fails
                 cleaned_summary = summary.strip().replace("\n", "")
                 try:
                     parsed_json = json.loads(cleaned_summary, strict=False)
-                    return {"summary": parsed_json, "error": None}
+                    return WorkflowResponse(
+                        model_info=model_info, summary=parsed_json, error=None
+                    ).model_dump()
                 except json.JSONDecodeError:
                     logger.error(f"Failed to parse JSON: {str(je)}")
-                    return {
-                        "summary": summary,
-                        "error": f"JSON parsing failed: {str(je)}",
-                    }
+                    return WorkflowResponse(
+                        model_info=model_info,
+                        summary=summary,
+                        error=f"JSON parsing failed: {str(je)}",
+                    ).model_dump()
 
         except Exception as e:
             logger.error(f"Failed to process URL: {str(e)}", exc_info=True)
-            return {"summary": None, "error": f"Workflow failed: {str(e)}"}
+            return WorkflowResponse(
+                model_info=model_info, summary=None, error=f"Workflow failed: {str(e)}"
+            ).model_dump()

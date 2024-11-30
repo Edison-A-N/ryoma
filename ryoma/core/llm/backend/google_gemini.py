@@ -7,6 +7,7 @@ from ryoma.core.llm.base import BaseLLM
 
 class GeminiLLM(BaseLLM):
     def __init__(self, model_id: str):
+        self._model_id = model_id
         self._chat_model = ChatGoogleGenerativeAI(
             model=model_id,
             google_api_key=settings.GOOGLE_API_KEY,
@@ -53,3 +54,9 @@ class GeminiLLM(BaseLLM):
             elif msg["role"] == "assistant":
                 converted.append(AIMessage(content=msg["content"]))
         return converted
+
+    def get_provider(self) -> str:
+        return "google"
+
+    def get_model_id(self) -> str:
+        return self._model_id

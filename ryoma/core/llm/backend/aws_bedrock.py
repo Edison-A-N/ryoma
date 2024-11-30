@@ -8,6 +8,7 @@ from ryoma.core.llm.base import BaseLLM
 
 class BedrockLLM(BaseLLM):
     def __init__(self, model_id: str, **kwargs):
+        self._model_id = model_id
         bedrock_endpoint = settings.AWS_BEDROCK_ENDPOINT or None
 
         self._chat_model = ChatBedrock(
@@ -49,3 +50,9 @@ class BedrockLLM(BaseLLM):
         for chunk in self.stream_model.stream(messages, **kwargs):
             if chunk.content:
                 yield chunk.content
+
+    def get_provider(self) -> str:
+        return "bedrock"
+
+    def get_model_id(self) -> str:
+        return self._model_id

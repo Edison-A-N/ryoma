@@ -8,6 +8,7 @@ from ryoma.core.llm.base import BaseLLM
 
 class OpenAILLM(BaseLLM):
     def __init__(self, model_id: str):
+        self._model_id = model_id
         self._chat_model = ChatOpenAI(
             model_name=model_id,
             openai_api_key=settings.OPENAI_API_KEY,
@@ -53,3 +54,9 @@ class OpenAILLM(BaseLLM):
         for chunk in self.stream_model.stream(messages, **kwargs):
             if chunk.content:
                 yield chunk.content
+
+    def get_provider(self) -> str:
+        return "openai"
+
+    def get_model_id(self) -> str:
+        return self._model_id

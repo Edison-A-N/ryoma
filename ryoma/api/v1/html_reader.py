@@ -2,7 +2,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from ryoma.core.workflow.html_reader import URLSummaryWorkflow
+from ryoma.core.workflow.html_reader import URLSummaryWorkflow, WorkflowResponse
 from ryoma.core.logging import logger
 
 router = APIRouter()
@@ -13,7 +13,7 @@ class HTMLReaderRequest(BaseModel):
 
 
 class HTMLReaderResponse(BaseModel):
-    answer: Any
+    answer: WorkflowResponse
 
 
 @router.post("/html-reader", response_model=HTMLReaderResponse)

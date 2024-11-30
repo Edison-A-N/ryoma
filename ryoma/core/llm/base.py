@@ -15,6 +15,16 @@ class BaseLLM(ABC):
         return self.chat_model
 
     @abstractmethod
+    def get_provider(self) -> str:
+        """Get the LLM provider name"""
+        pass
+
+    @abstractmethod
+    def get_model_id(self) -> str:
+        """Get the model identifier"""
+        pass
+
+    @abstractmethod
     def chat(
         self, prompt: str, history: Optional[List[Dict[str, str]]] = None, **kwargs
     ) -> str:
