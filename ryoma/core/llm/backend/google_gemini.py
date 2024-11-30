@@ -7,12 +7,16 @@ from ryoma.core.llm.base import BaseLLM
 
 class GeminiLLM(BaseLLM):
     def __init__(self, model_id: str):
-        self.model = ChatGoogleGenerativeAI(
+        self._chat_model = ChatGoogleGenerativeAI(
             model=model_id,
             google_api_key=settings.GOOGLE_API_KEY,
             convert_system_message_to_human=True,
         )
         self.history = []
+
+    @property
+    def chat_model(self) -> ChatGoogleGenerativeAI:
+        return self._chat_model
 
     def chat(
         self, prompt: str, history: Optional[List[Dict[str, str]]] = None, **kwargs
@@ -23,7 +27,7 @@ class GeminiLLM(BaseLLM):
             self.history = []
 
         self.history.append(HumanMessage(content=prompt))
-        response = self.model.invoke(self.history)
+        response = self.chat_model.invoke(self.history)
         self.history.append(response)
         return response.content
 
@@ -36,7 +40,7 @@ class GeminiLLM(BaseLLM):
             self.history = []
 
         self.history.append(HumanMessage(content=prompt))
-        response = self.model.stream(self.history)
+        response = self.chat_model.stream(self.history)
         for chunk in response:
             if chunk.content:
                 yield chunk.content

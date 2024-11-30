@@ -10,12 +10,16 @@ class BedrockLLM(BaseLLM):
     def __init__(self, model_id: str = "amazon.titan-text-premier-v1:0", **kwargs):
         bedrock_endpoint = settings.AWS_BEDROCK_ENDPOINT or None
 
-        self.chat_model = ChatBedrock(
+        self._chat_model = ChatBedrock(
             model_id=model_id, streaming=False, endpoint_url=bedrock_endpoint
         )
         self.stream_model = ChatBedrock(
             model_id=model_id, streaming=True, endpoint_url=bedrock_endpoint
         )
+
+    @property
+    def chat_model(self) -> ChatBedrock:
+        return self._chat_model
 
     def _convert_history(self, history: Optional[List[Dict[str, str]]]) -> List:
         if not history:
