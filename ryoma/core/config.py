@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 from pydantic_settings import BaseSettings
 
 
@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     LLM_MODEL_ID: str = ""
 
     # AWS Bedrock settings
-    AWS_BEDROCK_ENDPOINT: str = ""
+    AWS_BEDROCK_ENDPOINT: Optional[str] = None
 
     # OpenAI settings
     OPENAI_API_KEY: str = ""
@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     MILVUS_PORT: int = 19530
     MILVUS_COLLECTION_NAME: str = "vectors"
     MILVUS_DIM: int = 1536
+
+    ZHIPU_API_KEY: str = ""
 
     class Config:
         env_file = ".env"

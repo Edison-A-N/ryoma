@@ -3,7 +3,9 @@ from ryoma.core.llm.base import BaseLLM
 from ryoma.core.config import settings
 
 def create_llm(
-    provider: Optional[Literal["aws_bedrock", "openai", "google_gemini"]] = None,
+    provider: Optional[
+        Literal["aws_bedrock", "openai", "google_gemini", "zhipu"]
+    ] = None,
     model_id: Optional[str] = None,
     **kwargs: Dict[str, Any],
 ) -> BaseLLM:
@@ -42,5 +44,10 @@ def create_llm(
         from ryoma.core.llm.backend.google_gemini import GeminiLLM
 
         return GeminiLLM(model_id=model_id)
+
+    if provider == "zhipu":
+        from ryoma.core.llm.backend.zhipu import ZhipuLLM
+
+        return ZhipuLLM(model_id=model_id)
 
     raise ValueError(f"Unsupported provider: {provider}")

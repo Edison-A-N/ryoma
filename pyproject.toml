@@ -20,6 +20,8 @@ pymilvus = "^2.5.0"
 fasttext = "^0.9.3"
 aiohttp = "^3.11.8"
 bs4 = "^0.0.2"
+langchain-community = "^0.3.8"
+zhipuai = "^2.1.5.20230904"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.2.0"
